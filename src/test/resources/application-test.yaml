@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: FoodNest
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+cloud:
+  aws:
+    credentials:
+      access-key: dummy
+      secret-key: dummy
+    region:
+      static: us-east-1
+    sqs:
+      endpoint: http://localhost:4566
+      queues:
+        - food-order-queue
+        - order-notification-queue
+    sns:
+      endpoint: http://localhost:4566
+      topics:
+        - order-notifications
+
+aws:
+  sqs:
+    order-processing-queue: food-order-queue
+    notification-queue: order-notification-queue
+  sns:
+    notification-topic: order-notifications
