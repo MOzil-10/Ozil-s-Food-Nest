@@ -1,5 +1,6 @@
 package com.food.Nest.orders.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.food.Nest.menu.model.MenuItem;
 import com.food.Nest.menu.repository.MenuRepository;
 import com.food.Nest.orders.model.OrderEvent;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.food.Nest.orders.model.entity.OrderStatus.CONFIRMED;
-
 @Slf4j
 @Service
 @Transactional
@@ -40,6 +39,8 @@ public class OrderService {
 
     @Autowired
     private final SqsTemplate sqsTemplate;
+
+    private final ObjectMapper objectMapper;
 
     public OrderEntity createOrder(OrderRequest request) {
         log.info("Creating new order for customer: {}", request.getCustomerEmail());
@@ -152,7 +153,8 @@ public class OrderService {
         );
 
         try {
-            sqsTemplate.send(NOTIFICATION_QUEUE, orderEvent);
+            String messageJson = objectMapper.writeValueAsString(orderEvent);
+            sqsTemplate.send(NOTIFICATION_QUEUE, messageJson);
             log.info("Order status update event sent to queue: {}", NOTIFICATION_QUEUE);
         } catch (Exception e) {
             log.error("Failed to send order status update event to queue: {}", NOTIFICATION_QUEUE, e);
