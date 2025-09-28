@@ -15,9 +15,6 @@ import software.amazon.awssdk.services.sqs.model.QueueAttributeName;
 
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Service for low-level SQS operations using SqsTemplate for sending and SqsClient for queue attributes
- */
 @Service
 @RequiredArgsConstructor
 public class SqsService {
@@ -31,7 +28,7 @@ public class SqsService {
     private final ObjectMapper objectMapper;
 
     @Autowired
-    private final SqsClient sqsClient; // Kept for getQueueMessageCount, as SqsTemplate lacks direct queue attribute support
+    private final SqsClient sqsClient;
 
     @Value("${aws.sqs.order-processing-queue}")
     private String orderProcessingQueue;
@@ -39,9 +36,6 @@ public class SqsService {
     @Value("${aws.sqs.notification-queue}")
     private String notificationQueue;
 
-    /**
-     * Send order event to processing queue
-     */
     public CompletableFuture<Void> sendOrderForProcessing(OrderEvent orderEvent) {
         try {
             logger.info("Sending order event to processing queue: OrderId={}", orderEvent.getOrderId());
@@ -54,9 +48,6 @@ public class SqsService {
         return CompletableFuture.completedFuture(null);
     }
 
-    /**
-     * Send notification event
-     */
     public CompletableFuture<Void> sendNotificationEvent(OrderEvent orderEvent) {
         try {
             logger.info("Sending notification event to queue: OrderId={}", orderEvent.getOrderId());
@@ -69,9 +60,6 @@ public class SqsService {
         return CompletableFuture.completedFuture(null);
     }
 
-    /**
-     * Get queue attributes (message count)
-     */
     public int getQueueMessageCount(String queueUrl) {
         try {
             GetQueueAttributesRequest request = GetQueueAttributesRequest.builder()

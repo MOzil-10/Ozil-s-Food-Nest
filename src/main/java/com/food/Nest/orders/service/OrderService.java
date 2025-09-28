@@ -11,7 +11,9 @@ import com.food.Nest.orders.model.entity.OrderEntity;
 import com.food.Nest.orders.model.entity.OrderStatus;
 import com.food.Nest.orders.repository.OrderRepository;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -175,6 +177,8 @@ public class OrderService {
         return updateOrderStatus(orderId, OrderStatus.CANCELLED);
     }
 
+    @Setter
+    @Getter
     public static class OrderStatistics {
         private Long pendingCount;
         private Long confirmedCount;
@@ -184,25 +188,5 @@ public class OrderService {
         private Long deliveredCount;
         private Long cancelledCount;
 
-        public Long getPendingCount() { return pendingCount; }
-        public void setPendingCount(Long pendingCount) { this.pendingCount = pendingCount; }
-
-        public Long getConfirmedCount() { return confirmedCount; }
-        public void setConfirmedCount(Long confirmedCount) { this.confirmedCount = confirmedCount; }
-
-        public Long getPreparingCount() { return preparingCount; }
-        public void setPreparingCount(Long preparingCount) { this.preparingCount = preparingCount; }
-
-        public Long getReadyCount() { return readyCount; }
-        public void setReadyCount(Long readyCount) { this.readyCount = readyCount; }
-
-        public Long getOutForDeliveryCount() { return outForDeliveryCount; }
-        public void setOutForDeliveryCount(Long outForDeliveryCount) { this.outForDeliveryCount = outForDeliveryCount; }
-
-        public Long getDeliveredCount() { return deliveredCount; }
-        public void setDeliveredCount(Long deliveredCount) { this.deliveredCount = deliveredCount; }
-
-        public Long getCancelledCount() { return cancelledCount; }
-        public void setCancelledCount(Long cancelledCount) { this.cancelledCount = cancelledCount; }
     }
 }
